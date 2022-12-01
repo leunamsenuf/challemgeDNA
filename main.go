@@ -13,6 +13,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/valyala/fastjson"
 )
 
 var (
@@ -48,7 +50,9 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "POST done")
 
 		//begin process
+		s := []byte(results[1])
 
+		fmt.Printf("foo.0=%s\n", fastjson.GetString(s, "letters", "0"))
 		//end process
 
 	} else {
