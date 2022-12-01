@@ -1,7 +1,7 @@
 /*
-* Sample API with GET and POST endpoint.
-* POST data is converted to string and saved in internal memory.
-* GET endpoint returns all strings in an array.
+* APP: challengeDNA
+* AUTHOR: manuelfunes@yahoo.com.br
+* VERSION 0.0 - 2022-DEZ-01
  */
 package main
 
@@ -30,7 +30,7 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 			http.StatusInternalServerError)
 	}
 
-	fmt.Println(results[1])
+	//fmt.Println(results[1])
 	w.Write(jsonBody)
 
 }
@@ -44,7 +44,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 				http.StatusInternalServerError)
 		}
 		results = append(results, string(body))
-
+		fmt.Println(results[1])
 		fmt.Fprint(w, "POST done")
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
@@ -61,7 +61,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", GetHandler)
-	mux.HandleFunc("/post", PostHandler)
+	mux.HandleFunc("/sequence", PostHandler)
 
 	log.Printf("listening on port %s", *flagPort)
 	log.Fatal(http.ListenAndServe(":"+*flagPort, mux))
