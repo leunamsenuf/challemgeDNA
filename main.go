@@ -44,8 +44,13 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 				http.StatusInternalServerError)
 		}
 		results = append(results, string(body))
-		fmt.Println(results[1])
+		log.Printf(results[1])
 		fmt.Fprint(w, "POST done")
+
+		//begin process
+
+		//end process
+
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
@@ -65,4 +70,8 @@ func main() {
 
 	log.Printf("listening on port %s", *flagPort)
 	log.Fatal(http.ListenAndServe(":"+*flagPort, mux))
+}
+
+func processDNA(jsonDNA []string) {
+
 }
