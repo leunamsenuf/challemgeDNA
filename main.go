@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/valyala/fastjson"
@@ -54,6 +55,11 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Printf("foo.0=%s\n", fastjson.GetString(s, "letters", "0"))
 		//end process
+
+		for i := 1; i < 6; i++ {
+			strIndx := strconv.Itoa(i)
+			fmt.Printf("foo.0=%s\n", fastjson.GetString(s, "letters", strIndx))
+		}
 
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
