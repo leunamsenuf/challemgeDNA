@@ -13,6 +13,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/valyala/fastjson"
@@ -24,6 +25,12 @@ var (
 )
 
 var results []string
+
+type myJSON struct {
+	Dna []string
+}
+
+var totalSequence int
 
 // GetHandler handles the index route
 func GetHandler(w http.ResponseWriter, r *http.Request) {
@@ -50,16 +57,9 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf(results[1])
 		fmt.Fprint(w, "POST done")
 
-		//begin process
-		s := []byte(results[1])
+		contaLinhas(results)
 
-		fmt.Printf("foo.0=%s\n", fastjson.GetString(s, "letters", "0"))
-		//end process
-
-		for i := 1; i < 6; i++ {
-			strIndx := strconv.Itoa(i)
-			fmt.Printf("foo.0=%s\n", fastjson.GetString(s, "letters", strIndx))
-		}
+		log.Println("totalSequence: ", totalSequence)
 
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
@@ -82,6 +82,60 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+*flagPort, mux))
 }
 
-func processDNA(jsonDNA []string) {
+//----------------------FUNCTIOS
+
+// Conta ocurrencis 4 letras igauis
+func conta(jsonDNA string) int {
+	check := 1
+
+	//split
+	spl := strings.Split(jsonDNA, "")
+	//log.Println(spl[0])
+	for i := 0; i < 4; i++ {
+		if spl[i] == spl[i+1] {
+			check = check + 1
+		} else {
+			if check < 4 {
+				check = 0
+			}
+		}
+	}
+	return check
+}
+
+// Conta linhas
+func contaLinhas(results []string) {
+	//Get results
+	s := []byte(results[1])
+
+	//Conta linhas
+	for i := 0; i < 6; i++ {
+		strIndx := strconv.Itoa(i)
+		seq := fastjson.GetString(s, "letters", strIndx)
+		log.Println(seq)
+		conta := conta(seq)
+		log.Println(conta)
+		if conta == 4 {
+			totalSequence += 1
+		}
+	}
+
+}
+
+// Conta colunas
+func contaColunas(results []string) {
+	//Get results
+	s := []byte(results[1])
+
+	for i := 0; i < 6; i++ {
+		strIndx := strconv.Itoa(i)
+		seq := fastjson.GetString(s, "letters", strIndx)
+		log.Println(seq)
+		conta := conta(seq)
+		log.Println(conta)
+		if conta == 4 {
+			totalSequence += 1
+		}
+	}
 
 }
